@@ -10,4 +10,5 @@
     <string name="lbl_build_it_biggre">Build It Bigger</string>
     <string name="lbl_xyz_reader">XYZ Reader</string>
     <string name="lbl_capstone">Capstone: My Own App</string>
+    <string name="title_activity_spotify">SpotifyActivity</string>
 </resources>

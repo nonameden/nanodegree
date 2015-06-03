@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private Toast mAppToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,30 +51,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        String appName;
         switch (v.getId()) {
-            case R.id.spotify_streamer:
-                appName = "spotify streamer";
-                break;
-            case R.id.scores_app:
-                appName = "Super Duo: Score app";
-                break;
-            case R.id.library_app:
-                appName = "Super Duo: Library app";
-                break;
-            case R.id.build_it_bigger:
-                appName = "build it bigger app";
-                break;
-            case R.id.xyz_reader:
-                appName = "xyz reader";
-                break;
-            case R.id.capstone:
-                appName = "my capstone app";
-                break;
             default:
-                return;
+                onUnhandledViewClicked(v);
+                break;
         }
-        String message = String.format(Locale.ENGLISH, "This button will launch %s", appName);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void onUnhandledViewClicked(View v) {
+        if(v instanceof TextView) {
+            CharSequence text = ((TextView) v).getText();
+            if(mAppToast!=null) {
+                mAppToast.cancel();
+            }
+            String message = String.format(Locale.ENGLISH, "This button will launch %s", text);
+            mAppToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+            mAppToast.show();
+        }
     }
 }

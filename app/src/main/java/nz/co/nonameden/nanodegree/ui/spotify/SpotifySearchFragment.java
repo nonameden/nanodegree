@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import nz.co.nonameden.nanodegree.R;
 import nz.co.nonameden.nanodegree.ui.base.BaseFragment;
 
 /**
@@ -16,7 +17,12 @@ public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.Sp
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.fragment_spotify_search, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

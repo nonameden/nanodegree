@@ -1,5 +1,6 @@
 package nz.co.nonameden.nanodegree;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Locale;
+
+import nz.co.nonameden.nanodegree.ui.spotify.SpotifySearchActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -52,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.spotify_streamer:
+                onOpenSpotifyStreamer();
+                break;
             default:
                 onUnhandledViewClicked(v);
                 break;
@@ -68,5 +74,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mAppToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
             mAppToast.show();
         }
+    }
+
+    private void onOpenSpotifyStreamer() {
+        Intent intent = new Intent(this, SpotifySearchActivity.class);
+        startActivity(intent);
     }
 }

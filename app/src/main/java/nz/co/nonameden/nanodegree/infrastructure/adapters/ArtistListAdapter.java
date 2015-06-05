@@ -9,16 +9,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import kaaes.spotify.webapi.android.models.Artist;
 import nz.co.nonameden.nanodegree.R;
 import nz.co.nonameden.nanodegree.infrastructure.adapters.viewholders.ArtistViewHolder;
-import nz.co.nonameden.nanodegree.service.compat.MediaItemCompat;
 
 /**
  * Created by nonameden on 5/06/15.
  */
 public class ArtistListAdapter extends BaseAdapter {
 
-    private List<MediaItemCompat> mItems = new ArrayList<>();
+    private List<Artist> mItems = new ArrayList<>();
 
     @Override
     public int getCount() {
@@ -26,7 +26,7 @@ public class ArtistListAdapter extends BaseAdapter {
     }
 
     @Override
-    public MediaItemCompat getItem(int position) {
+    public Artist getItem(int position) {
         return mItems.get(position);
     }
 
@@ -47,7 +47,7 @@ public class ArtistListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void setItems(Collection<MediaItemCompat> items) {
+    public void setItems(Collection<Artist> items) {
         mItems.clear();
         if(items!=null && items.size()>0) {
             mItems.addAll(items);

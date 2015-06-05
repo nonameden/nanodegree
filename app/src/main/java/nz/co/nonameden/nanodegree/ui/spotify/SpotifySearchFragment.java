@@ -1,8 +1,9 @@
 package nz.co.nonameden.nanodegree.ui.spotify;
 
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -14,37 +15,29 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import java.util.List;
-
+import kaaes.spotify.webapi.android.models.Artist;
+import kaaes.spotify.webapi.android.models.ArtistsPager;
 import nz.co.nonameden.nanodegree.R;
 import nz.co.nonameden.nanodegree.infrastructure.adapters.ArtistListAdapter;
-import nz.co.nonameden.nanodegree.service.compat.MediaBrowserCompat;
-import nz.co.nonameden.nanodegree.service.compat.MediaItemCompat;
+import nz.co.nonameden.nanodegree.infrastructure.loaders.AbsNetworkLoader;
+import nz.co.nonameden.nanodegree.infrastructure.loaders.ArtistSearchLoader;
 import nz.co.nonameden.nanodegree.ui.base.BaseFragment;
+import retrofit.RetrofitError;
 
 /**
  * Created by nonameden on 3/06/15.
  */
-public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.SpotifySearchCallback> implements AdapterView.OnItemClickListener {
+public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.SpotifySearchCallback>
+        implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<ArtistsPager>, AbsNetworkLoader.ErrorCallback {
 
-    private static final long CHARACTER_WAIT_MS = 200;
+    private static final int LOADER_ARTIST_SEARCH = 100;
+    private static final String ARG_SEARCH_QUERY = "arg-search-query";
+    private static final long CHARACTER_WAIT_MS = 200; // ms
+
     private final Handler mHandler = new Handler();
     private EditText mSearchView;
     private ListView mListView;
     private ArtistListAdapter mAdapter;
-    private final TextWatcher mSearchQueryListener = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            mHandler.removeCallbacks(mSearchRunnable);
-            mHandler.postDelayed(mSearchRunnable, CHARACTER_WAIT_MS);
-        }
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +64,20 @@ public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.Sp
         mListView.setOnItemClickListener(this);
     }
 
+    private final TextWatcher mSearchQueryListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            mHandler.removeCallbacks(mSearchRunnable);
+            mHandler.postDelayed(mSearchRunnable, CHARACTER_WAIT_MS);
+        }
+    };
+
     private Runnable mSearchRunnable = new Runnable() {
         @Override
         public void run() {
@@ -83,25 +90,9 @@ public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.Sp
         if(TextUtils.isEmpty(searchQuery)) {
             mAdapter.setItems(null);
         } else {
-            final MediaBrowserCompat mediaBrowser = getCallback().getMediaBrowserCompat();
-            if (mediaBrowser != null) {
-                final String query = "SEARCH_ARTIST:" + searchQuery;
-                mediaBrowser.subscribe(query, new MediaBrowserCompat.SubscriptionCallback() {
-                    @Override
-                    public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaItemCompat> children) {
-                        mAdapter.setItems(children);
-                        MediaBrowserCompat mediaBrowser = getCallback().getMediaBrowserCompat();
-                        if(mediaBrowser!=null) {
-                            mediaBrowser.unsubscribe(query);
-                        }
-                    }
-
-                    @Override
-                    public void onError(@NonNull String id) {
-                        super.onError(id);
-                    }
-                });
-            }
+            Bundle arguments = new Bundle();
+            arguments.putString(ARG_SEARCH_QUERY, searchQuery);
+            getLoaderManager().restartLoader(LOADER_ARTIST_SEARCH, arguments, this);
         }
     }
 
@@ -109,23 +100,38 @@ public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.Sp
     protected SpotifySearchCallback initStubCallback() {
         return new SpotifySearchCallback() {
             @Override
-            public void onArtistClicked(MediaItemCompat mediaItem) {}
-
-            @Override
-            public MediaBrowserCompat getMediaBrowserCompat() {
-                return null;
-            }
+            public void onArtistClicked(Artist artist) {}
         };
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        MediaItemCompat item = mAdapter.getItem(position);
-        getCallback().onArtistClicked(item);
+        Artist artist = mAdapter.getItem(position);
+        getCallback().onArtistClicked(artist);
+    }
+
+    @Override
+    public Loader<ArtistsPager> onCreateLoader(int id, Bundle args) {
+        String searchQuery = args.getString(ARG_SEARCH_QUERY);
+        return new ArtistSearchLoader(getActivity(), searchQuery, this);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ArtistsPager> loader, ArtistsPager data) {
+        mAdapter.setItems(data.artists.items);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<ArtistsPager> loader) {
+        mAdapter.setItems(null);
+    }
+
+    @Override
+    public void onNetworkError(RetrofitError error) {
+
     }
 
     public interface SpotifySearchCallback {
-        void onArtistClicked(MediaItemCompat mediaItem);
-        MediaBrowserCompat getMediaBrowserCompat();
+        void onArtistClicked(Artist artist);
     }
 }

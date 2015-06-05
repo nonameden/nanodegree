@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import kaaes.spotify.webapi.android.models.Track;
 import nz.co.nonameden.nanodegree.R;
-import nz.co.nonameden.nanodegree.service.compat.MediaBrowserCompat;
-import nz.co.nonameden.nanodegree.service.compat.MediaItemCompat;
 import nz.co.nonameden.nanodegree.ui.base.BaseFragment;
 
 /**
@@ -36,17 +35,11 @@ public class SpotifyTopTracksFragment extends BaseFragment<SpotifyTopTracksFragm
     protected Callback initStubCallback() {
         return new Callback() {
             @Override
-            public MediaBrowserCompat getMediaBrowserCompat() {
-                return null;
-            }
-
-            @Override
-            public void onTrackClicked(MediaItemCompat item) {}
+            public void onTrackClicked(Track track) {}
         };
     }
 
     public interface Callback {
-        MediaBrowserCompat getMediaBrowserCompat();
-        void onTrackClicked(MediaItemCompat item);
+        void onTrackClicked(Track track);
     }
 }

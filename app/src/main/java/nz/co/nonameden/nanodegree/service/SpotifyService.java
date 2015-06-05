@@ -20,6 +20,8 @@ public class SpotifyService extends MediaBrowserServiceCompat {
 
     // It is using my MediaBrowserServiceCompat which is based on native source code with small
     // modifications to support previous platforms
+    //
+    // This service is gonna be used in next Stage for playback
 
     private MediaSessionCompat mSession;
     private SpotifyWrapper mSpotifyWrapper;
@@ -45,18 +47,25 @@ public class SpotifyService extends MediaBrowserServiceCompat {
                 MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mSession.release();
+    }
+
     @Nullable
     @Override
     public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
-        return new BrowserRoot("MEDIA_ROOT", rootHints);
+        return new BrowserRoot(Constants.Media.ROOT_ID, rootHints);
     }
 
     @Override
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<MediaItemCompat[]> result) {
-        mSpotifyWrapper.processMediaBowserRequest(parentId, result);
+        mSpotifyWrapper.processMediaBrowserRequest(parentId, result);
     }
 
     private final class MediaSessionCallback extends MediaSessionCompat.Callback {
-
+        // Is gonna be used later in feature stage
     }
 }

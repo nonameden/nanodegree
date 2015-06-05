@@ -1,6 +1,7 @@
 package nz.co.nonameden.nanodegree.ui.spotify;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -9,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -23,8 +25,10 @@ import nz.co.nonameden.nanodegree.ui.base.BaseFragment;
 /**
  * Created by nonameden on 3/06/15.
  */
-public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.SpotifySearchCallback> {
+public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.SpotifySearchCallback> implements AdapterView.OnItemClickListener {
 
+    private static final long CHARACTER_WAIT_MS = 200;
+    private final Handler mHandler = new Handler();
     private EditText mSearchView;
     private ListView mListView;
     private ArtistListAdapter mAdapter;
@@ -37,7 +41,8 @@ public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.Sp
 
         @Override
         public void afterTextChanged(Editable s) {
-            onSearchQueryChanged(s.toString());
+            mHandler.removeCallbacks(mSearchRunnable);
+            mHandler.postDelayed(mSearchRunnable, CHARACTER_WAIT_MS);
         }
     };
 
@@ -63,18 +68,37 @@ public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.Sp
 
         mListView = (ListView) view.findViewById(R.id.list);
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
     }
 
-    private void onSearchQueryChanged(String searchQuery) {
+    private Runnable mSearchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            onSearchQueryChanged();
+        }
+    };
+
+    private void onSearchQueryChanged() {
+        String searchQuery = mSearchView.getText().toString();
         if(TextUtils.isEmpty(searchQuery)) {
-            //TODO: Clean
+            mAdapter.setItems(null);
         } else {
-            MediaBrowserCompat mediaBrowser = getCallback().getMediaBrowserCompat();
+            final MediaBrowserCompat mediaBrowser = getCallback().getMediaBrowserCompat();
             if (mediaBrowser != null) {
-                mediaBrowser.subscribe("SEARCH_ARTIST:" + searchQuery, new MediaBrowserCompat.SubscriptionCallback() {
+                final String query = "SEARCH_ARTIST:" + searchQuery;
+                mediaBrowser.subscribe(query, new MediaBrowserCompat.SubscriptionCallback() {
                     @Override
                     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaItemCompat> children) {
                         mAdapter.setItems(children);
+                        MediaBrowserCompat mediaBrowser = getCallback().getMediaBrowserCompat();
+                        if(mediaBrowser!=null) {
+                            mediaBrowser.unsubscribe(query);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull String id) {
+                        super.onError(id);
                     }
                 });
             }
@@ -85,7 +109,7 @@ public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.Sp
     protected SpotifySearchCallback initStubCallback() {
         return new SpotifySearchCallback() {
             @Override
-            public void onArtistClicked() {}
+            public void onArtistClicked(MediaItemCompat mediaItem) {}
 
             @Override
             public MediaBrowserCompat getMediaBrowserCompat() {
@@ -94,8 +118,14 @@ public class SpotifySearchFragment extends BaseFragment<SpotifySearchFragment.Sp
         };
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        MediaItemCompat item = mAdapter.getItem(position);
+        getCallback().onArtistClicked(item);
+    }
+
     public interface SpotifySearchCallback {
-        void onArtistClicked();
+        void onArtistClicked(MediaItemCompat mediaItem);
         MediaBrowserCompat getMediaBrowserCompat();
     }
 }

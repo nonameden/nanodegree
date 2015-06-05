@@ -10,5 +10,6 @@ public final class Constants {
         public static final String ROOT_ID = "ROOT_ID";
         public static final String SEARCH_ARTIST = "SEARCH_ARTIST:";
         public static final String ARTIST = "ARTIST:";
+        public static final String TRACK = "TRACK:";
     }
 }

@@ -3,6 +3,7 @@ package nz.co.nonameden.nanodegree.ui.spotify;
 import android.os.Bundle;
 
 import nz.co.nonameden.nanodegree.R;
+import nz.co.nonameden.nanodegree.service.compat.MediaItemCompat;
 
 public class SpotifySearchActivity extends BaseSpotifyActivity
         implements SpotifySearchFragment.SpotifySearchCallback {
@@ -14,7 +15,7 @@ public class SpotifySearchActivity extends BaseSpotifyActivity
     }
 
     @Override
-    public void onArtistClicked() {
+    public void onArtistClicked(MediaItemCompat mediaItem) {
 
     }
 }

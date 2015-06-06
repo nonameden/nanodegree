@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="nz.co.nonameden.nanodegree" >
+          xmlns:tools="http://schemas.android.com/tools"
+          package="nz.co.nonameden.nanodegree">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".NanoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,6 +22,34 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.spotify.SpotifySearchActivity"
+            android:label="@string/title_activity_spotify"
+            android:parentActivityName=".MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.spotify.SpotifyTopTracksActivity"
+            android:label="@string/title_activity_spotify_tracks"
+            android:parentActivityName=".ui.spotify.SpotifySearchActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.spotify.SpotifySearchActivity" />
+        </activity>
+
+        <activity
+            android:name=".ui.spotify.SpotifySettingsActivity"
+            android:label="@string/title_settings"
+            android:parentActivityName=".ui.spotify.SpotifySearchActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.spotify.SpotifySearchActivity" />
         </activity>
     </application>
 

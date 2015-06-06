@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nz.co.nonameden.nanodegree.R;
-import nz.co.nonameden.nanodegree.infrastructure.adapters.viewholders.ArtistViewHolder;
-import nz.co.nonameden.nanodegree.infrastructure.models.ArtistViewModel;
+import nz.co.nonameden.nanodegree.infrastructure.adapters.viewholders.TrackViewHolder;
+import nz.co.nonameden.nanodegree.infrastructure.models.TrackViewModel;
 
 /**
  * Created by nonameden on 5/06/15.
  */
-public class ArtistListAdapter extends BaseAdapter {
+public class TrackListAdapter extends BaseAdapter {
 
-    private ArrayList<ArtistViewModel> mItems = new ArrayList<>();
+    private ArrayList<TrackViewModel> mItems = new ArrayList<>();
 
     @Override
     public int getCount() {
@@ -25,7 +25,7 @@ public class ArtistListAdapter extends BaseAdapter {
     }
 
     @Override
-    public ArtistViewModel getItem(int position) {
+    public TrackViewModel getItem(int position) {
         return mItems.get(position);
     }
 
@@ -38,15 +38,15 @@ public class ArtistListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            convertView = inflater.inflate(R.layout.item_artist, parent, false);
-            ArtistViewHolder.create(convertView);
+            convertView = inflater.inflate(R.layout.item_track, parent, false);
+            TrackViewHolder.create(convertView);
         }
-        ArtistViewHolder viewHolder = (ArtistViewHolder) convertView.getTag();
+        TrackViewHolder viewHolder = (TrackViewHolder) convertView.getTag();
         viewHolder.bind(mItems.get(position));
         return convertView;
     }
 
-    public void setItems(List<ArtistViewModel> items) {
+    public void setItems(List<TrackViewModel> items) {
         mItems.clear();
         if(items!=null && items.size()>0) {
             mItems.addAll(items);
@@ -54,7 +54,7 @@ public class ArtistListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public ArrayList<ArtistViewModel> getItems() {
+    public ArrayList<TrackViewModel> getItems() {
         return mItems;
     }
 }

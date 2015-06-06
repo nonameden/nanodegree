@@ -25,7 +25,31 @@
         </activity>
         <activity
             android:name=".ui.spotify.SpotifySearchActivity"
-            android:label="@string/title_activity_spotify" >
+            android:label="@string/title_activity_spotify"
+            android:parentActivityName=".MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.spotify.SpotifyTopTracksActivity"
+            android:label="@string/title_activity_spotify_tracks"
+            android:parentActivityName=".ui.spotify.SpotifySearchActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.spotify.SpotifySearchActivity" />
+        </activity>
+
+        <activity
+            android:name=".ui.spotify.SpotifySettingsActivity"
+            android:label="@string/title_settings"
+            android:parentActivityName=".ui.spotify.SpotifySearchActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.spotify.SpotifySearchActivity" />
         </activity>
     </application>
 

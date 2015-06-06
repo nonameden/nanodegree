@@ -1,30 +1,44 @@
 package nz.co.nonameden.nanodegree.ui.spotify;
 
 import android.os.Bundle;
-import android.support.v4.media.MediaDescriptionCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
 
 import nz.co.nonameden.nanodegree.R;
+import nz.co.nonameden.nanodegree.infrastructure.models.ArtistViewModel;
+import nz.co.nonameden.nanodegree.infrastructure.models.TrackViewModel;
+import nz.co.nonameden.nanodegree.ui.base.BaseActivity;
 
 /**
  * Created by nonameden on 6/06/15.
  */
-public class SpotifyTopTracksActivity extends AppCompatActivity {
+public class SpotifyTopTracksActivity extends BaseActivity
+        implements SpotifyTopTracksFragment.Callback {
 
-    public static final String EXTRA_ARTIST_MEDIA_DESCRIPTION = "extra-artist-media-description";
-
-    private MediaDescriptionCompat mArtistMediaDescription;
+    public static final String EXTRA_ARTIST = "extra-artist";
+    private ArtistViewModel mArtist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Just because in feature stage we gonna support tablet with 2-pane
-        // we gonna pass artist directly and nit through argument
+        // we gonna pass artist directly
 
         setContentView(R.layout.activity_spotify_top_tracks);
 
-        mArtistMediaDescription = getIntent().getParcelableExtra(EXTRA_ARTIST_MEDIA_DESCRIPTION);
-        assert mArtistMediaDescription!=null : "Artist Media Description is required";
+        mArtist = getIntent().getParcelableExtra(EXTRA_ARTIST);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null) {
+            actionBar.setSubtitle(mArtist.getName());
+        }
+
+        SpotifyTopTracksFragment fragment = (SpotifyTopTracksFragment) getFragmentManager()
+                .findFragmentById(R.id.spotify_top_tracks);
+        fragment.setArtistId(mArtist.getId());
+    }
+
+    @Override
+    public void onTrackClicked(TrackViewModel track) {
+
     }
 }

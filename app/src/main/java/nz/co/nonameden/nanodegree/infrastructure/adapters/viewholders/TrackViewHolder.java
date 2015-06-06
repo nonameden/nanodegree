@@ -10,31 +10,34 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import nz.co.nonameden.nanodegree.R;
-import nz.co.nonameden.nanodegree.infrastructure.models.ArtistViewModel;
+import nz.co.nonameden.nanodegree.infrastructure.models.TrackViewModel;
 
 /**
  * Created by nonameden on 5/06/15.
  */
-public class ArtistViewHolder {
+public class TrackViewHolder {
 
     private ImageView mImageView;
-    private TextView mTextView;
+    private TextView mTrackNameView;
+    private final TextView mAlbumNameView;
 
     public static void create(@NonNull View view) {
-        ArtistViewHolder viewHolder = new ArtistViewHolder(view);
+        TrackViewHolder viewHolder = new TrackViewHolder(view);
         view.setTag(viewHolder);
     }
 
-    private ArtistViewHolder(@NonNull View view) {
+    private TrackViewHolder(@NonNull View view) {
         mImageView = (ImageView) view.findViewById(R.id.image);
-        mTextView = (TextView) view.findViewById(R.id.text);
+        mTrackNameView = (TextView) view.findViewById(R.id.track_name);
+        mAlbumNameView = (TextView) view.findViewById(R.id.album_name);
     }
 
-    public void bind(ArtistViewModel artist) {
+    public void bind(TrackViewModel track) {
         Picasso.with(mImageView.getContext())
-                .load(artist.getImageUrl())
+                .load(track.getSmallImageUrl())
                 .placeholder(new ColorDrawable(Color.GRAY))
                 .into(mImageView);
-        mTextView.setText(artist.getName());
+        mTrackNameView.setText(track.getName());
+        mAlbumNameView.setText(track.getAlbumName());
     }
 }

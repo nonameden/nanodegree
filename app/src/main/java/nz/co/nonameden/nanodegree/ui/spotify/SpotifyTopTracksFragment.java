@@ -71,6 +71,8 @@ public class SpotifyTopTracksFragment extends BaseFragment<SpotifyTopTracksFragm
 
         if(mAdapter.getCount() == 0) {
             UiUtils.crossfadeViews(mProgressView, mListView, false);
+        } else {
+            UiUtils.crossfadeViews(mListView, mProgressView, false);
         }
     }
 

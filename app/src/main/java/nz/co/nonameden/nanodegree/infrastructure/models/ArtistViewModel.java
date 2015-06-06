@@ -1,7 +1,13 @@
 package nz.co.nonameden.nanodegree.infrastructure.models;
 
+import android.databinding.BindingAdapter;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import kaaes.spotify.webapi.android.models.Artist;
 import nz.co.nonameden.nanodegree.infrastructure.shared.Constants;
@@ -62,5 +68,13 @@ public class ArtistViewModel implements Parcelable {
 
     public String getImageUrl() {
         return mImageUrl;
+    }
+
+    @BindingAdapter({"bind:image"})
+    public static void loadImage(ImageView view, String url) {
+        Picasso.with(view.getContext())
+                .load(url)
+                .placeholder(new ColorDrawable(Color.GRAY))
+                .into(view);
     }
 }

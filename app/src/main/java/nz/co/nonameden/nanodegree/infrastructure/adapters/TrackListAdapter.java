@@ -1,5 +1,6 @@
 package nz.co.nonameden.nanodegree.infrastructure.adapters;
 
+import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nz.co.nonameden.nanodegree.R;
-import nz.co.nonameden.nanodegree.infrastructure.adapters.viewholders.TrackViewHolder;
+import nz.co.nonameden.nanodegree.databinding.ItemTrackBinding;
 import nz.co.nonameden.nanodegree.infrastructure.models.TrackViewModel;
 
 /**
@@ -38,11 +39,13 @@ public class TrackListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            convertView = inflater.inflate(R.layout.item_track, parent, false);
-            TrackViewHolder.create(convertView);
+            ItemTrackBinding dataBinding = DataBindingUtil.inflate(
+                    inflater, R.layout.item_track, parent, false);
+            convertView = dataBinding.getRoot();
+            convertView.setTag(dataBinding);
         }
-        TrackViewHolder viewHolder = (TrackViewHolder) convertView.getTag();
-        viewHolder.bind(mItems.get(position));
+        ItemTrackBinding dataBinding = (ItemTrackBinding) convertView.getTag();
+        dataBinding.setTrack(mItems.get(position));
         return convertView;
     }
 

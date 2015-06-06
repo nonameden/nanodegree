@@ -1,5 +1,6 @@
 package nz.co.nonameden.nanodegree.infrastructure.adapters;
 
+import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nz.co.nonameden.nanodegree.R;
-import nz.co.nonameden.nanodegree.infrastructure.adapters.viewholders.ArtistViewHolder;
+import nz.co.nonameden.nanodegree.databinding.ItemArtistBinding;
 import nz.co.nonameden.nanodegree.infrastructure.models.ArtistViewModel;
 
 /**
@@ -38,11 +39,13 @@ public class ArtistListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            convertView = inflater.inflate(R.layout.item_artist, parent, false);
-            ArtistViewHolder.create(convertView);
+            ItemArtistBinding dataBinding = DataBindingUtil.inflate(
+                    inflater, R.layout.item_artist, parent, false);
+            convertView = dataBinding.getRoot();
+            convertView.setTag(dataBinding);
         }
-        ArtistViewHolder viewHolder = (ArtistViewHolder) convertView.getTag();
-        viewHolder.bind(mItems.get(position));
+        ItemArtistBinding dataBinding = (ItemArtistBinding) convertView.getTag();
+        dataBinding.setArtist(mItems.get(position));
         return convertView;
     }
 

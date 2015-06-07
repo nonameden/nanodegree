@@ -42,8 +42,17 @@ public class SpotifySearchActivity extends BaseActivity
 
     @Override
     public void onArtistClicked(ArtistViewModel artist) {
-        Intent intent = new Intent(this, SpotifyTopTracksActivity.class);
-        intent.putExtra(SpotifyTopTracksActivity.EXTRA_ARTIST, artist);
-        startActivity(intent);
+        SpotifyTopTracksFragment tracksFragment = getTopTracksFragment();
+        if(tracksFragment == null) {
+            Intent intent = new Intent(this, SpotifyTopTracksActivity.class);
+            intent.putExtra(SpotifyTopTracksActivity.EXTRA_ARTIST, artist);
+            startActivity(intent);
+        } else {
+            tracksFragment.setArtistId(artist.getId());
+        }
+    }
+
+    private SpotifyTopTracksFragment getTopTracksFragment() {
+        return (SpotifyTopTracksFragment) getFragmentManager().findFragmentById(R.id.spotify_top_tracks);
     }
 }

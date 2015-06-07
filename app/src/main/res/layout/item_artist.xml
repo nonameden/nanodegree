@@ -33,6 +33,7 @@
             android:layout_marginLeft="@dimen/default_space"
             android:layout_marginRight="@dimen/default_space"
             android:layout_weight="1"
+            android:maxLines="2"
             android:text="@{artist.name}"
             android:textAppearance="?android:textAppearanceMedium"
             tools:text="Artist name"/>
